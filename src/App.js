@@ -1,4 +1,5 @@
 import logo from './logo.svg';
+import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
 import * as  firebase from 'firebase/app';
 import * as  firestore from 'firebase/firestore';
@@ -7,7 +8,7 @@ import { CalendarView } from './CalendarView';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { getFirestore } from "firebase/firestore";
-
+import bootstrap from 'bootstrap';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBbZLmKtqwDs3V-wPQL7ZovFTxdLQ_-Umo",
@@ -35,7 +36,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <section>
-          {user ? db !== undefined ? < CalendarView db={db} /> : <>Initiliaxing </> : <SignIn />}
+          {user ? db !== undefined ? < CalendarView db={db} /> : <>Initializing...</> : <SignIn />}
         </section>
       </header>
     </div>
