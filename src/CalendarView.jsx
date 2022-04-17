@@ -37,14 +37,19 @@ export const CalendarView = (props) => {
     });
   }, [date, canPost]);
 
+  let factAPI = `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/all/${date.getMonth()}/${date.getDate()}`;
   useEffect(() => {
-    fetch(
-      "http://numbersapi.com/" +
-        (Number(date.getMonth()) + 1).toString() +
-        "/" +
-        date.getDate() +
-        "/date"
-    ).then((resp) => resp.text().then((data) => setFunFact(data)));
+    fetch(factAPI).then((resp) =>
+      resp.json().then((data) => {
+        if (data.selected.length > 0) {
+          var fact =
+            data.selected[Math.floor(Math.random() * data.selected.length)];
+          setFunFact(
+            "On this date in " + fact.year + ", " + LowerCase(fact.text)
+          );
+        }
+      })
+    );
   }, [date]);
 
   const MemoryDisplay = ({ message, name, place }) => {
@@ -209,6 +214,9 @@ export const CalendarView = (props) => {
 
   function Capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+  function LowerCase(str) {
+    return str.charAt(0).toLowerCase() + str.slice(1);
   }
   function handleSubmit(e) {
     e.preventDefault();
