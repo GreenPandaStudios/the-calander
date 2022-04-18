@@ -4,7 +4,15 @@ import { getAuth, signInAnonymously } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import bootstrap from "bootstrap";
-import { Alert, Modal, Button, Form, Row, Col } from "react-bootstrap";
+import {
+  Alert,
+  Modal,
+  Button,
+  Form,
+  Row,
+  Col,
+  Container,
+} from "react-bootstrap";
 import {
   collection,
   addDoc,
@@ -39,13 +47,17 @@ export const CalendarView = (props) => {
 
   let factAPI = `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/all/${date.getMonth()}/${date.getDate()}`;
   useEffect(() => {
+    setFunFact("");
     fetch(factAPI).then((resp) =>
       resp.json().then((data) => {
         if (data.selected.length > 0) {
           var fact =
             data.selected[Math.floor(Math.random() * data.selected.length)];
           setFunFact(
-            "On this date in " + fact.year + ", " + LowerCase(fact.text)
+            (date.getFullYear() - fact.year < 0
+              ? "In " + Number(fact.year - date.getFullYear()) + " years, "
+              : date.getFullYear() - fact.year + " years ago, ") +
+              LowerCase(fact.text)
           );
         }
       })
@@ -72,7 +84,11 @@ export const CalendarView = (props) => {
   };
 
   return (
-    <>
+    <Container className="w-85">
+      <Row className="my-4">
+        <h1 className="display-2 m-6">The Calendar</h1>
+      </Row>
+
       <Alert style={{ backgroundColor: "#212529", outline: false }}>
         <Alert.Heading style={{ color: "white" }}>
           <h1 className="display-4">Today is {date.toDateString()}</h1>
@@ -85,6 +101,25 @@ export const CalendarView = (props) => {
           <Button variant="outline-light btn-lg" onClick={() => setShow(true)}>
             Time Travel
           </Button>
+        </p>
+        <p className="row" style={{ color: "white" }}>
+          <Col>
+            <Button
+              variant="outline-light btn-lg"
+              onClick={() => setDate(new Date(Number(date) - 86400000))}
+            >
+              Yesterday
+            </Button>
+          </Col>
+          <Col>
+            <Button
+              variant="outline-light btn-lg"
+              disabled={date >= new Date() - 86400000}
+              onClick={() => setDate(new Date(Number(date) + 86400000))}
+            >
+              Tomorrow
+            </Button>
+          </Col>
         </p>
       </Alert>
       <Modal
@@ -194,10 +229,10 @@ export const CalendarView = (props) => {
       </Modal>
       <Alert style={{ backgroundColor: "#212529", outline: false }}>
         <Alert.Heading style={{ color: "white" }}>
-          <p className="lead">{funFact}</p>
-          <h1 className="display-4">
+          <h1 className="display-4 my-4">
             What happened to you on {date.toDateString()}?
           </h1>
+          <p className="lead">{funFact}</p>
         </Alert.Heading>
 
         <p className="row" style={{ color: "white" }}>
@@ -209,7 +244,7 @@ export const CalendarView = (props) => {
           </Button>
         </p>
       </Alert>
-    </>
+    </Container>
   );
 
   function Capitalize(str) {
