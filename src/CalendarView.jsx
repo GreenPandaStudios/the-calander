@@ -45,11 +45,15 @@ export const CalendarView = (props) => {
     });
   }, [date, canPost]);
 
-  let factAPI = `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/all/${date.getMonth()}/${date.getDate()}`;
+  let factAPI = `https://api.wikimedia.org/feed/v1/wikipedia/en/onthisday/selected/${date.getMonth()}/${date.getDate()}`;
   useEffect(() => {
     setFunFact("");
+    let thisDate = date;
+
     fetch(factAPI).then((resp) =>
       resp.json().then((data) => {
+        if (thisDate != date) return;
+
         if (data.selected.length > 0) {
           var fact =
             data.selected[Math.floor(Math.random() * data.selected.length)];
