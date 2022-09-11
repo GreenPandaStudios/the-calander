@@ -15,8 +15,7 @@ export const MemoryDisplay = ({ message, name, place, link }) => {
         </Row>
         {link ? (
           <Row className="my-4">
-            <Col />
-            <Col xs={10}>
+            <Col>
               <ReactTinyLink
                 cardSize="small"
                 showGraphic={true}
@@ -24,9 +23,9 @@ export const MemoryDisplay = ({ message, name, place, link }) => {
                 minLine={1}
                 url={link}
                 proxyurl={"https://proxy.cors.sh/"}
+                width = "75vw"
               />
             </Col>
-            <Col />
           </Row>
         ) : null}
         {
